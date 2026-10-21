@@ -59,38 +59,58 @@ O site abre em `http://localhost:5173`. A API fica em `http://localhost:3001`. O
 
 ## Como publicar no Render.com
 
-Nao foi possivel acessar a conta do Render daqui. Siga estes passos no navegador.
+Nao ha API key nem sessao do Render neste ambiente. Eu nao consigo clicar em Create Web Service na conta de voces. O arquivo `render.yaml` ja esta no GitHub. Use um dos dois caminhos abaixo.
 
-### 1. Banco (opcional, mas recomendado)
+### Caminho A (mais simples): Blueprint
 
-No painel do Render: New + > PostgreSQL > plano Basic. Copie a Internal Database URL.
+1. Abra https://dashboard.render.com
+2. New + > Blueprint
+3. Conecte o repositorio `JefersonElaine/E-J`, branch `main`
+4. Blueprint Path: `render.yaml`
+5. Revise o Web Service `elaine-jeferson-galeria`, o Postgres `elaine-jeferson-db` e o disco `/var/data`
+6. Clique em Deploy Blueprint
 
-### 2. Disco para as fotos
+O Render gera `SESSION_SECRET` e `SETUP_TOKEN`. Depois do deploy, copie o `SETUP_TOKEN` em Environment e ative a conta em `/admin/ativar`.
 
-O disco do servico web do Render some quando o servico reinicia, se voce nao anexar um disco. Crie um disco de 10 GB montado em `/var/data`.
+### Caminho B: tela New Web Service
 
-### 3. Servico web
+Se voce ja esta em https://dashboard.render.com/web/new?onboarding=active :
 
-New + > Web Service > conecte o GitHub `JefersonElaine/E-J`.
+1. Source: GitHub > `JefersonElaine/E-J`
+2. Branch: `main`
+3. Language: Node
+4. Name: `elaine-jeferson-galeria`
+5. Region: Oregon (ou a mais proxima)
+6. Instance: qualquer plano pago (disco persistente nao funciona no plano free)
+7. Build Command:
 
-- Runtime: Node
-- Build: `npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install`
-- Start: `npm --prefix backend start`
-- Health check: `/api/health`
+```
+npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install
+```
 
-Variaveis:
+8. Start Command:
+
+```
+npm --prefix backend start
+```
+
+9. Advanced > Health Check Path: `/api/health`
+10. Advanced > Disk: 10 GB, mount path `/var/data`
+11. Environment:
 
 | Nome | Valor |
 | --- | --- |
 | `NODE_ENV` | `production` |
-| `SESSION_SECRET` | gerado com `openssl rand -hex 48` |
-| `SETUP_TOKEN` | gerado com `openssl rand -hex 32` |
-| `DATABASE_URL` | URL interna do PostgreSQL (ou vazio para SQLite em `/var/data`) |
+| `SESSION_SECRET` | Generate (ou `openssl rand -hex 48`) |
+| `SETUP_TOKEN` | Generate (ou `openssl rand -hex 32`) |
+| `DATABASE_URL` | Internal Database URL do Postgres (crie o banco antes, New + > Postgres) |
 | `DATA_DIR` | `/var/data` |
 | `STORAGE_DRIVER` | `local` |
-| `PUBLIC_URL` | `https://SEU-SERVICO.onrender.com` |
+| `PUBLIC_URL` | a URL `https://....onrender.com` do servico, depois do primeiro deploy |
 
-O arquivo `render.yaml` neste repositorio descreve a mesma estrutura. Voce pode usa-lo em New + > Blueprint.
+12. Create Web Service
+
+Crie o Postgres antes, se ainda nao existir: New + > Postgres, nome `elaine-jeferson-db`, copie a Internal Database URL para `DATABASE_URL`.
 
 ### 4. Armazenamento mais seguro (S3 ou Cloudflare R2)
 

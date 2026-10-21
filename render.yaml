@@ -2,10 +2,14 @@ services:
   - type: web
     name: elaine-jeferson-galeria
     runtime: node
-    plan: starter
+    plan: 0.5c-512mb
+    region: oregon
+    repo: https://github.com/JefersonElaine/E-J
+    branch: main
     buildCommand: npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install
     startCommand: npm --prefix backend start
     healthCheckPath: /api/health
+    autoDeployTrigger: commit
     envVars:
       - key: NODE_ENV
         value: production
@@ -22,7 +26,10 @@ services:
       - key: DATA_DIR
         value: /var/data
       - key: PUBLIC_URL
-        sync: false
+        fromService:
+          name: elaine-jeferson-galeria
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
     disk:
       name: gallery-data
       mountPath: /var/data
@@ -30,6 +37,8 @@ services:
 
 databases:
   - name: elaine-jeferson-db
-    plan: basic-256mb
+    plan: 0.1c-256mb
     databaseName: galeria
     user: galeria
+    postgresMajorVersion: "16"
+    ipAllowList: []
