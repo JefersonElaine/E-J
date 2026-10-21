@@ -6,7 +6,7 @@ services:
     region: oregon
     repo: https://github.com/JefersonElaine/E-J
     branch: main
-    buildCommand: npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install
+    buildCommand: npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install
     startCommand: npm --prefix backend start
     healthCheckPath: /api/health
     autoDeployTrigger: commit

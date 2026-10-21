@@ -1,10 +1,13 @@
 {
   "name": "elaine-jeferson-galeria",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "install:all": "npm --prefix backend install && npm --prefix frontend install",
     "dev": "node scripts/dev.mjs",
-    "build": "npm --prefix frontend run build",
+    "build": "npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install",
     "start": "npm --prefix backend start",
     "test": "npm --prefix backend test"
   }

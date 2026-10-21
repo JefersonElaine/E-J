@@ -59,7 +59,19 @@ O site abre em `http://localhost:5173`. A API fica em `http://localhost:3001`. O
 
 ## Como publicar no Render.com
 
-Nao ha API key nem sessao do Render neste ambiente. Eu nao consigo clicar em Create Web Service na conta de voces. O arquivo `render.yaml` ja esta no GitHub. Use um dos dois caminhos abaixo.
+Servico atual (plano gratuito):
+
+- Site: https://elaine-jeferson-galeria.onrender.com
+- Painel: https://dashboard.render.com/web/srv-dbcan659fdbs73cdlq7g
+- Postgres: https://dashboard.render.com/d/dpg-dbcamm7avr4c73fdbl80-a
+
+O plano gratuito nao tem disco persistente. Arquivos dos convidados somem se o servico reiniciar. O Postgres gratuito deste ambiente expira em 20/11/2026, antes do casamento. Antes da festa, coloque um cartao em https://dashboard.render.com/billing, suba o Web Service para um plano com disco de 10 GB em `/var/data` e troque o banco para um plano pago.
+
+O build precisa instalar o Vite mesmo com `NODE_ENV=production`:
+
+```
+npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install
+```
 
 ### Caminho A (mais simples): Blueprint
 
@@ -85,7 +97,7 @@ Se voce ja esta em https://dashboard.render.com/web/new?onboarding=active :
 7. Build Command:
 
 ```
-npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install
+npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install
 ```
 
 8. Start Command:
