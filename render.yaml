@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: elaine-jeferson-galeria
+    runtime: node
+    plan: starter
+    buildCommand: npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install
+    startCommand: npm --prefix backend start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: SETUP_TOKEN
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: elaine-jeferson-db
+          property: connectionString
+      - key: STORAGE_DRIVER
+        value: local
+      - key: DATA_DIR
+        value: /var/data
+      - key: PUBLIC_URL
+        sync: false
+    disk:
+      name: gallery-data
+      mountPath: /var/data
+      sizeGB: 10
+
+databases:
+  - name: elaine-jeferson-db
+    plan: basic-256mb
+    databaseName: galeria
+    user: galeria
