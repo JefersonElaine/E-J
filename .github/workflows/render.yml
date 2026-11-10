@@ -1,0 +1,51 @@
+name: Render
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: inspect existing Render resources, or trigger a deploy
+        required: true
+        default: inspect
+        type: choice
+        options:
+          - inspect
+          - deploy
+
+permissions: {}
+
+concurrency:
+  group: render-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID || vars.RENDER_SERVICE_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Require Render API key
+        run: |
+          set +x
+          if [ -z "$RENDER_API_KEY" ]; then
+            echo "Missing GitHub secret RENDER_API_KEY."
+            echo "Add it at Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      - name: Inspect Render
+        if: ${{ github.event.inputs.action == 'inspect' }}
+        run: python3 .github/scripts/render.py inspect
+
+      - name: Deploy on Render
+        if: ${{ github.event.inputs.action == 'deploy' }}
+        run: python3 .github/scripts/render.py deploy

@@ -1,16 +1,5 @@
 node_modules/
-dist/
-data/
-uploads/
-tmp/
 .env
-.env.local
+data/
 *.log
 .DS_Store
-coverage/
-frontend/dist/
-backend/data/
-.vite/
-*.sqlite
-*.db
-.cache/

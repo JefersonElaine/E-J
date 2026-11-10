@@ -1,14 +1,30 @@
 {
   "name": "elaine-jeferson-galeria",
+  "version": "1.0.0",
   "private": true,
-  "engines": {
-    "node": "20.x"
-  },
+  "description": "Galeria de fotos e videos do casamento de Elaine e Jeferson",
+  "main": "server.js",
   "scripts": {
-    "install:all": "npm --prefix backend install && npm --prefix frontend install",
-    "dev": "node scripts/dev.mjs",
-    "build": "npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install",
-    "start": "npm --prefix backend start",
-    "test": "npm --prefix backend test"
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "express-session": "^1.18.1",
+    "file-type": "^16.5.4",
+    "heic-convert": "^2.1.0",
+    "helmet": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
+    "qrcode": "^1.5.4",
+    "session-file-store": "^1.5.0",
+    "sharp": "^0.33.5",
+    "uuid": "^10.0.0"
   }
 }

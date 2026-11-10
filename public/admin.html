@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Painel — Elaine &amp; Jeferson</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div id="loginView" class="admin-login">
+    <div class="card">
+      <p class="kicker">Painel</p>
+      <h1 class="names" style="font-size:48px;margin-bottom:18px;">Elaine <span class="amp">&amp;</span> Jeferson</h1>
+      <p class="hint">Entre para aprovar as fotos dos convidados.</p>
+      <label for="username">Usu&aacute;rio</label>
+      <input id="username" type="text" autocomplete="username" />
+      <label for="password">Senha</label>
+      <input id="password" type="password" autocomplete="current-password" />
+      <button class="btn" id="loginBtn" type="button">Entrar</button>
+      <p class="error-text" id="loginError"></p>
+    </div>
+  </div>
+
+  <div id="appView" class="admin-shell hidden">
+    <div class="admin-top">
+      <div>
+        <h1>Painel</h1>
+        <p class="sub" style="text-align:left;letter-spacing:0.12em;" id="who"></p>
+      </div>
+      <div class="row-actions">
+        <a class="btn small ghost" href="/">Ver galeria</a>
+        <button class="btn small ghost" id="logoutBtn" type="button">Sair</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-status="pending" type="button">Pendentes <span id="cPending">0</span></button>
+      <button class="tab" data-status="approved" type="button">Aprovadas <span id="cApproved">0</span></button>
+      <button class="tab" data-status="rejected" type="button">Rejeitadas <span id="cRejected">0</span></button>
+      <button class="tab" data-status="all" type="button">Todas <span id="cAll">0</span></button>
+    </div>
+
+    <div class="batch">
+      <label style="margin:0;display:flex;align-items:center;gap:8px;letter-spacing:0.08em;">
+        <input type="checkbox" id="selectAll" /> Selecionar visíveis
+      </label>
+      <button class="btn small" id="batchApprove" type="button">Aprovar</button>
+      <button class="btn small ghost" id="batchReject" type="button">Rejeitar</button>
+      <button class="btn small danger" id="batchDelete" type="button">Excluir</button>
+      <a class="btn small ghost" href="/api/admin/download-all" id="dlApproved">Baixar aprovadas</a>
+      <a class="btn small ghost" href="/api/admin/download-all?status=all" id="dlAll">Baixar todas</a>
+    </div>
+
+    <p class="empty hidden" id="adminEmpty">Nenhum item nesta lista.</p>
+    <div class="admin-grid" id="adminGrid"></div>
+
+    <div class="settings album-box" id="albumBox">
+      <h2>Álbum do ensaio</h2>
+      <p class="hint" style="text-align:left;">Estas fotos entram direto no site, sem fila de aprovação. O original fica guardado; o site mostra uma versão menor em WebP.</p>
+
+      <label for="albumFiles">Escolher fotos (JPG, PNG, WEBP, HEIC)</label>
+      <div class="file-btn btn">
+        Selecionar fotos do ensaio
+        <input id="albumFiles" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif" multiple />
+      </div>
+      <p class="limits" id="albumLimits">Até 30 fotos por vez. Cada uma pode ter uma legenda.</p>
+      <div class="previews" id="albumPreviews"></div>
+      <label for="albumCaption">Legenda para as fotos selecionadas (opcional)</label>
+      <input id="albumCaption" type="text" maxlength="180" placeholder="Uma frase para este lote" />
+      <div class="progress" id="albumProgress"><span></span></div>
+      <button class="btn solid" id="albumSend" type="button" disabled>Publicar no ensaio</button>
+      <p class="error-text" id="albumError"></p>
+
+      <p class="hint" style="text-align:left;margin-top:18px;">Arraste para reordenar. No celular, mantenha pressionado e deslize. A estrela define a foto principal do topo do site.</p>
+      <p class="empty hidden" id="albumEmpty">Ainda não há fotos no ensaio.</p>
+      <div class="album-grid" id="albumGrid"></div>
+    </div>
+
+    <div class="settings">
+      <h2>Administradores</h2>
+      <p class="hint" style="text-align:left;">A senha inicial vem de uma vari&aacute;vel de ambiente. Depois voc&ecirc; pode trocar aqui, sem gravar senha no c&oacute;digo.</p>
+      <ul class="admin-list" id="adminList"></ul>
+
+      <label for="newUser">Novo administrador</label>
+      <input id="newUser" type="text" placeholder="usuario" />
+      <label for="newPass">Senha (m&iacute;nimo 8 caracteres)</label>
+      <input id="newPass" type="password" />
+      <button class="btn" id="addAdminBtn" type="button">Criar administrador</button>
+      <p class="error-text" id="addAdminMsg"></p>
+
+      <h2 style="margin-top:28px;">Trocar minha senha</h2>
+      <label for="curPass">Senha atual</label>
+      <input id="curPass" type="password" />
+      <label for="nextPass">Nova senha</label>
+      <input id="nextPass" type="password" />
+      <button class="btn ghost" id="changePassBtn" type="button">Salvar nova senha</button>
+      <p class="error-text" id="passMsg"></p>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Elaine &amp; Jeferson — Galeria</title>
+  <meta name="theme-color" content="#f4efe6" />
+  <meta name="description" content="Galeria de fotos e vídeos do casamento de Elaine e Jeferson. 27 de novembro de 2026, Bem Servido Bistro." />
+  <meta property="og:title" content="Elaine &amp; Jeferson — Galeria" />
+  <meta property="og:description" content="Celebre conosco. Envie suas fotos e vídeos do nosso casamento." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="__ORIGIN__/assets/og.jpg" />
+  <meta property="og:url" content="__ORIGIN__/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <a class="skip" href="#enviar">Ir para o envio de fotos</a>
+  <div class="page">
+    <p class="kicker fade-in">Com a bênção de Deus e dos nossos pais</p>
+    <h1 class="names fade-in delay-1">Elaine <span class="amp">&amp;</span> Jeferson</h1>
+    <p class="date-line fade-in delay-2">27 de novembro de 2026</p>
+    <div class="rule"></div>
+    <p class="sub">sexta-feira · 14h30</p>
+    <p class="thanks-note hidden" id="afterEvent">Obrigado por celebrar com a gente.</p>
+
+    <div class="ornament" aria-hidden="true">
+      <i></i>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M12 20 C10 14 4 12 4 7 C7 6 10 9 12 13 C14 9 17 6 20 7 C20 12 14 14 12 20 Z"/>
+      </svg>
+      <i></i>
+    </div>
+
+    <div class="hero-wrap fade-in">
+      <picture>
+        <source id="heroWebp" srcset="/assets/hero.webp" type="image/webp" />
+        <img id="heroImg" src="/assets/hero-sm.jpg" width="900" height="1200" alt="Elaine e Jeferson se beijando na praia, ao entardecer" />
+      </picture>
+      <p class="hero-caption" id="heroCaption">Uma recepção íntima em celebração ao nosso casamento</p>
+    </div>
+
+    <p class="invite-copy" id="inviteCopy">
+      Guarde este dia conosco. Envie as fotos e os vídeos que fizer — depois da aprovação, eles aparecem aqui para todos.
+    </p>
+    <p class="thanks-note">A presença de vocês já é o nosso presente.</p>
+
+    <section class="card" id="enviar">
+      <h2>Envie suas fotos e vídeos</h2>
+      <p class="hint" id="uploadHint">Escolha da galeria ou tire agora, direto do celular.</p>
+
+      <label for="guestName">Seu nome (opcional)</label>
+      <input id="guestName" type="text" maxlength="60" placeholder="Como você gostaria de aparecer" autocomplete="name" />
+
+      <label for="caption">Legenda (opcional)</label>
+      <textarea id="caption" maxlength="180" placeholder="Uma frase, um carinho, um momento…"></textarea>
+
+      <div class="file-btn btn">
+        Escolher fotos e vídeos
+        <input id="files" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,.jpg,.jpeg,.png,.webp,.heic,.heif,.mp4,.mov" multiple />
+      </div>
+      <p class="limits" id="limits">Fotos até 15 MB (JPG, PNG, HEIC, WEBP). Vídeos até 80 MB (MP4, MOV).</p>
+
+      <div class="previews" id="previews"></div>
+      <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+      <button class="btn solid" id="sendBtn" type="button" disabled>Confirmar envio</button>
+      <div class="toast" id="toast" role="status">
+        <strong>Recebemos!</strong>
+        <span id="toastMsg">Suas fotos aparecerão na galeria depois da aprovação.</span>
+      </div>
+      <p class="error-text" id="formError"></p>
+    </section>
+
+    <div class="ornament" aria-hidden="true">
+      <i></i>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M4 16 C8 6 12 8 12 14 C12 8 16 6 20 16"/>
+        <path d="M12 14 C11 18 12 21 12 21 C12 21 13 18 12 14 Z"/>
+      </svg>
+      <i></i>
+    </div>
+
+    <div id="ensaioBlock" class="hidden">
+      <section class="section-title" id="ensaio">
+        <h2>Nosso ensaio</h2>
+        <p>Momentos nossos, antes da festa.</p>
+      </section>
+      <div class="mosaic" id="mosaicEnsaio"></div>
+    </div>
+
+    <section class="section-title" id="galeria">
+      <h2>A festa</h2>
+      <p>As fotos dos convidados, aprovadas, atualizam sozinhas.</p>
+    </section>
+    <div class="toolbar hidden" id="downloadBar">
+      <button class="btn small ghost" id="downloadAll" type="button">Baixar todas</button>
+    </div>
+    <p class="empty" id="empty">As fotos da festa vão aparecer aqui.</p>
+    <div class="mosaic" id="mosaic"></div>
+
+    <footer>
+      Bem Servido Bistro<br />
+      Rua Maurício de Abreu, 188 · Beira-Mar<br />
+      Duque de Caxias — RJ
+    </footer>
+    <div class="corner corner-bl" aria-hidden="true"></div>
+    <div class="corner corner-br" aria-hidden="true"></div>
+  </div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada">
+    <button class="close-x" id="lbClose" type="button" aria-label="Fechar">&times;</button>
+    <button class="nav-btn nav-prev" id="lbPrev" type="button" aria-label="Anterior">&#8249;</button>
+    <button class="nav-btn nav-next" id="lbNext" type="button" aria-label="Próxima">&#8250;</button>
+    <div class="stage" id="lbStage"></div>
+    <div class="bar" id="lbBar"></div>
+    <div class="actions">
+      <a class="btn" id="lbDownload" download>Baixar</a>
+    </div>
+  </div>
+
+  <script src="/js/guest.js"></script>
+</body>
+</html>

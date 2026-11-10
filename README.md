@@ -1,185 +1,47 @@
 # Galeria Elaine & Jeferson
 
-Galeria oficial do casamento de Elaine e Jeferson, em 27 de novembro de 2026.
+Site de fotos e videos do casamento, feito para ser aberto pelo celular via QR Code nas mesas.
 
-Os convidados enviam fotos e videos pelo celular. Nada aparece na galeria publica antes da aprovacao do casal. Nao e preciso criar conta para ver ou baixar o que ja foi aprovado.
-
-## Limitacao de material visual
-
-Nao havia convite digital, fotografias do casal nem o arquivo `Elaine.zip` acessivel neste ambiente. O envio do ZIP na issue do GitHub falhou. A identidade visual foi criada no estilo de album editorial: papel marfim, tipografia serifada, monograma E & J e paleta terra/rose. Quando vocês tiverem uma foto do casal, substituam o quadro da pagina inicial.
-
-## O que o sistema faz
-
-- Pagina inicial com data, frase, botoes e QR Code para a recepcao
-- Envio de varias fotos e videos, com previa, progresso e aviso de moderacao
-- Galeria publica em mosaico, filtros, busca por nome, download e visualizacao ampliada
-- Painel em `/admin` com login, estatisticas, aprovacao, rejeicao, exclusao e troca de senha
-- Arquivos fora do banco de dados (pasta persistente ou S3/R2)
-- SQLite no disco persistente, ou PostgreSQL se `DATABASE_URL` existir
-
-## Como testar neste computador
-
-1. Instale o Node.js 20 ou mais novo.
-2. Na pasta do projeto:
+## Como rodar
 
 ```bash
-npm --prefix backend install
-npm --prefix frontend install
-```
+# Instale as dependencias
+npm install
 
-3. Copie as variaveis:
-
-```bash
+# Copie o arquivo de exemplo e preencha usuario e senha do admin
 cp .env.example .env
+
+# Inicie o servidor
+npm start
 ```
 
-4. No Linux/macOS, gere segredos:
+O site abre em `http://localhost:3000`.
+O painel fica em `http://localhost:3000/admin`.
 
-```bash
-openssl rand -hex 48
-openssl rand -hex 32
-```
+## Onde configurar usuario e senha
 
-Cole o primeiro em `SESSION_SECRET` e o segundo em `SETUP_TOKEN`.
-
-5. Suba os dois servicos:
-
-```bash
-chmod +x start.sh
-./start.sh
-```
-
-O site abre em `http://localhost:5173`. A API fica em `http://localhost:3001`. O frontend encaminha `/api` para o backend.
-
-6. Ative o administrador em `http://localhost:5173/admin/ativar`
-   - Token: o valor de `SETUP_TOKEN`
-   - E-mail e senha de voces (a senha precisa ter pelo menos 10 caracteres, com letras e numeros)
-
-7. Painel: `http://localhost:5173/admin`
-
-## Como publicar no Render.com
-
-Servico atual (plano gratuito):
-
-- Site: https://elaine-jeferson-galeria.onrender.com
-- Painel: https://dashboard.render.com/web/srv-dbcan659fdbs73cdlq7g
-- Postgres: https://dashboard.render.com/d/dpg-dbcamm7avr4c73fdbl80-a
-
-O plano gratuito nao tem disco persistente. Arquivos dos convidados somem se o servico reiniciar. O Postgres gratuito deste ambiente expira em 20/11/2026, antes do casamento. Antes da festa, coloque um cartao em https://dashboard.render.com/billing, suba o Web Service para um plano com disco de 10 GB em `/var/data` e troque o banco para um plano pago.
-
-O build precisa instalar o Vite mesmo com `NODE_ENV=production`:
+A senha **nao** fica no codigo. Edite o arquivo `.env` (ele nao vai para o GitHub):
 
 ```
-npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install
+PORT=3000
+ADMIN_USER=elaine
+ADMIN_PASSWORD=sua-senha-forte
+SESSION_SECRET=uma-chave-longa-e-aleatoria
+MAX_IMAGE_MB=15
+MAX_VIDEO_MB=80
 ```
 
-### Caminho A (mais simples): Blueprint
+O primeiro administrador e criado automaticamente a partir de `ADMIN_USER` e `ADMIN_PASSWORD` na primeira inicializacao. Depois disso, voce pode:
 
-1. Abra https://dashboard.render.com
-2. New + > Blueprint
-3. Conecte o repositorio `JefersonElaine/E-J`, branch `main`
-4. Blueprint Path: `render.yaml`
-5. Revise o Web Service `elaine-jeferson-galeria`, o Postgres `elaine-jeferson-db` e o disco `/var/data`
-6. Clique em Deploy Blueprint
+- trocar a senha no painel (`/admin`, secao no final da pagina)
+- criar outros administradores no mesmo painel
 
-O Render gera `SESSION_SECRET` e `SETUP_TOKEN`. Depois do deploy, copie o `SETUP_TOKEN` em Environment e ative a conta em `/admin/ativar`.
+Se o site estiver no Render, Railway, Fly.io ou similar, coloque essas mesmas chaves em **Environment Variables** do painel do provedor.
 
-### Caminho B: tela New Web Service
+## Armazenamento
 
-Se voce ja esta em https://dashboard.render.com/web/new?onboarding=active :
+Fotos, videos e o banco simples ficam em `data/` (pasta ignorada pelo Git). Enquanto esse diretorio existir, os arquivos nao somem ao reiniciar o servidor.
 
-1. Source: GitHub > `JefersonElaine/E-J`
-2. Branch: `main`
-3. Language: Node
-4. Name: `elaine-jeferson-galeria`
-5. Region: Oregon (ou a mais proxima)
-6. Instance: qualquer plano pago (disco persistente nao funciona no plano free)
-7. Build Command:
+## QR Code
 
-```
-npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install
-```
-
-8. Start Command:
-
-```
-npm --prefix backend start
-```
-
-9. Advanced > Health Check Path: `/api/health`
-10. Advanced > Disk: 10 GB, mount path `/var/data`
-11. Environment:
-
-| Nome | Valor |
-| --- | --- |
-| `NODE_ENV` | `production` |
-| `SESSION_SECRET` | Generate (ou `openssl rand -hex 48`) |
-| `SETUP_TOKEN` | Generate (ou `openssl rand -hex 32`) |
-| `DATABASE_URL` | Internal Database URL do Postgres (crie o banco antes, New + > Postgres) |
-| `DATA_DIR` | `/var/data` |
-| `STORAGE_DRIVER` | `local` |
-| `PUBLIC_URL` | a URL `https://....onrender.com` do servico, depois do primeiro deploy |
-
-12. Create Web Service
-
-Crie o Postgres antes, se ainda nao existir: New + > Postgres, nome `elaine-jeferson-db`, copie a Internal Database URL para `DATABASE_URL`.
-
-### 4. Armazenamento mais seguro (S3 ou Cloudflare R2)
-
-Para nao depender so do disco do Render, crie um bucket no Cloudflare R2 (em geral mais barato) ou na AWS S3 e preencha:
-
-```
-STORAGE_DRIVER=s3
-S3_ENDPOINT=https://SEU_ID.r2.cloudflarestorage.com
-S3_REGION=auto
-S3_BUCKET=elaine-jeferson
-S3_ACCESS_KEY_ID=...
-S3_SECRET_ACCESS_KEY=...
-S3_FORCE_PATH_STYLE=true
-```
-
-Os arquivos dos convidados nunca vao para o GitHub.
-
-## Ativar a conta de administrador (producao)
-
-1. Abra `https://SEU-SITE/admin/ativar`
-2. Cole o `SETUP_TOKEN` que esta nas variaveis do Render (Environment)
-3. Informe o e-mail do casal e uma senha forte
-4. Guarde a senha em um lugar seguro. Ela nao fica no codigo.
-
-Se esquecer a senha, use `/admin/recuperar` com o mesmo `SETUP_TOKEN`. Depois, troque o token nas variaveis de ambiente.
-
-## Moderacao no dia do casamento
-
-1. Entre em `/admin`
-2. Filtre por Pendentes
-3. Toque na miniatura para ver a foto ou o video
-4. Selecione e clique em Aprovar (publica) ou Rejeitar (some da galeria publica)
-5. O motivo da rejeicao e interno, os convidados nao veem
-
-## Custos e limites (valores de referencia, podem mudar)
-
-- Render Web Starter: cobrado ao mes; o plano gratuito, quando existir, dorme apos inatividade
-- PostgreSQL Basic: cobrado ao mes
-- Disco persistente: cobrado por GB
-- Cloudflare R2: camada gratuita generosa para um casamento; cobre bem fotos de uma festa se os videos forem curtos
-
-Este projeto nao promete gratuidade permanente nem armazenamento ilimitado. No codigo, o padrao e 12 MB por foto, 80 MB por video, 90 segundos e 10 arquivos por envio.
-
-## Testes
-
-Na pasta do projeto:
-
-```bash
-npm --prefix backend install
-npm --prefix backend test
-```
-
-## Estrutura
-
-```
-backend/     API Node.js
-frontend/    React + TypeScript
-data/        Banco SQLite e arquivos (nao vai para o Git)
-render.yaml  Modelo de publicacao no Render
-```
+Com o site no ar, acesse `/qr.png` para baixar o QR Code em alta resolucao apontando para a pagina publica.
